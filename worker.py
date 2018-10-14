@@ -13,7 +13,7 @@ async def on_message(message):
 
     if message.content.startswith('!shuffle'):
         msg = 'Shuffling'
-        await client.send_file(message.channel, '/home/daniel/Downloads/ezgif.com-video-to-gif.gif', content='Shuffling')
+        await client.send_file(message.channel, './ezgif.com-video-to-gif.gif', content='Shuffling')
 
 @client.event
 async def on_ready():
