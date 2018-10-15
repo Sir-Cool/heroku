@@ -2,6 +2,7 @@
 import discord
 import random
 import math
+import traceback
 
 def remove_zeroes(exp):
     expression = exp.lstrip('0')
@@ -42,19 +43,28 @@ async def on_message(message):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     if message.content.startswith('!help'):
         if message.content == '!help':
+            await client.change_status(game=discord.Game(name='type !help'))
             await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
-I also like modular arithmetic! (!calculate [ mod <modulus>])
+I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets indicate optional parameter
     Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()""")
     if message.content.startswith('!calculate'):
+        global calculated
+        modulus = None
         params = message.content.replace('modulo', 'mod').split(' mod ')
         if len(params) == 2:
             modulus = params[1].lstrip('0')
-        else:
-            modulus = str(random.randint(2, 10))
+        #else:
+        #    modulus = str(random.randint(2, 10))
         #exec('calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
-        exec('global calculated\ncalculated = str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('^', '**').replace('fact', 'math.factorial')[11:]) + ') % ' + modulus + ') + " (modulo ' + modulus + ')"')
+        try:
+            if modulus == None:
+                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]))
+            else:
+                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(message.content.lower().replace('mod', '%').replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]) + ')) + " (modulo ' + modulus + ')"')
+        except Exception:
+            calculated = '```' + traceback.format_exc() + '```'
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
-        await client.send_message(message.channel, message.content[11:] + ' = ' + str(calculated))
+        await client.send_message(message.channel, str(calculated))
         
 @client.event
 async def on_ready():
