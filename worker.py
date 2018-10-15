@@ -16,6 +16,9 @@ async def on_message(message):
         await client.send_file(message.channel, './ezgif.com-video-to-gif.gif')
     if message.content.startswith('!calculate 2x3'):
         await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
+    elif message.content.startswith('!calculate'):
+        #if message.content
+        await client.send_message(message.channel, message.content)
         
 @client.event
 async def on_ready():
