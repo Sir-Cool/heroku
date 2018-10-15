@@ -1,5 +1,6 @@
 # Work with Python 3.6
 import discord
+import random
 
 TOKEN = 'NTAxMDcxMDU0NTk3MjU5Mjkx.DqUCkg.eEeYjShgTCLY0ZHsI5ojy3yeQgQ'
 
@@ -17,8 +18,9 @@ async def on_message(message):
     if message.content.startswith('!calculate 2x3'):
         await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     elif message.content.startswith('!calculate'):
-        #if message.content
-        await client.send_message(message.channel, message.content)
+        modulus = random.randint(0, 10)
+        exec('calculate = str(' + message.content.replace('x', '*') + ' % ' + modulus + ') + " (modulo ' + modulus + ' obviously)"')
+        await client.send_message(message.channel, calculated)
         
 @client.event
 async def on_ready():
