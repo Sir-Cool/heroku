@@ -40,6 +40,11 @@ async def on_message(message):
         await client.send_file(message.channel, './ezgif.com-video-to-gif.gif')
     #if message.content.startswith('!calculate 2x3'):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
+    if message.content.startswith('!help'):
+        if message.content == '!help':
+            await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
+I also like modular arithmetic! (!calculate [ mod <modulus>])
+    Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()""")
     if message.content.startswith('!calculate'):
         params = message.content.replace('modulo', 'mod').split(' mod ')
         if len(params) == 2:
@@ -47,7 +52,7 @@ async def on_message(message):
         else:
             modulus = str(random.randint(2, 10))
         #exec('calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
-        exec('global calculated\ncalculated = str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt')[11:]) + ') % ' + modulus + ') + " (modulo ' + modulus + ')"')
+        exec('global calculated\ncalculated = str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('^', '**').replace('fact', 'math.factorial')[11:]) + ') % ' + modulus + ') + " (modulo ' + modulus + ')"')
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         await client.send_message(message.channel, message.content[11:] + ' = ' + str(calculated))
         
