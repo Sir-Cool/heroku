@@ -20,9 +20,9 @@ async def on_message(message):
     elif message.content.startswith('!calculate'):
         modulus = str(random.randint(2, 10))
         #exec('calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
-        exec('calculated = str((' + message.content.replace('x', '*')[11:].replace('x', '*') + ') % ' + modulus + ') + " (modulo ' + modulus + ' obviously)"')
+        exec('calculated = str((' + message.content.replace('x', '*')[11:] + ') % ' + modulus + ') + " (modulo ' + modulus + ' obviously)"')
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
-        await client.send_message(message.channel, calculated)
+        await client.send_message(message.channel, str(calculated))
         
 @client.event
 async def on_ready():
