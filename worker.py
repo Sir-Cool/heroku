@@ -43,7 +43,7 @@ async def on_message(message):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     if message.content.startswith('!help'):
         if message.content == '!help':
-            await client.change_status(game=discord.Game(name='type !help'))
+            await client.change_presence(game=discord.Game(name='type !help'))
             await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
 I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets indicate optional parameter
     Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()""")
