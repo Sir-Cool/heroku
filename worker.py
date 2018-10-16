@@ -58,11 +58,11 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
         #exec('calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         try:
             if modulus == None:
-                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]))
+                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:])) + '))'
             else:
                 exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(message.content.lower().replace('mod', '%').replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]) + ')) + " (modulo ' + modulus + ')"')
         except Exception:
-            calculated = '```' + traceback.format_exc() + '```'
+            calculated = '@Sir_Awesome```' + traceback.format_exc() + '```'
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         await client.send_message(message.channel, str(calculated))
         
