@@ -34,7 +34,8 @@ def reverse(string):
 
 @client.event
 async def on_message(message):
-    await client.change_presence(game=discord.Game(501771890495324170))
+    await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Working on: '+message.content))
+    #await client.change_presence(game=discord.Game(name='type !help', type='Testing'))
     # we do not want the bot to reply to itself
     if message.author == client.user:
         return
@@ -60,14 +61,15 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
         #exec('calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         try:
             if modulus == None:
-                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:])) + '))'
+                exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(params[0].lower().replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]) + '))')
             else:
                 exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(message.content.lower().replace('mod', '%').replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]) + ')) + " (modulo ' + modulus + ')"')
         except Exception:
             calculated = '@Sir_Awesome```' + traceback.format_exc() + '```'
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         await client.send_message(message.channel, str(calculated))
-        
+    await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+message.content))
+
 @client.event
 async def on_ready():
     print('Logged in as')
