@@ -34,6 +34,7 @@ def reverse(string):
 
 @client.event
 async def on_message(message):
+    await client.change_presence(game=discord.Game(501771890495324170))
     # we do not want the bot to reply to itself
     if message.author == client.user:
         return
@@ -45,7 +46,6 @@ async def on_message(message):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     if message.content.startswith('!help'):
         if message.content == '!help':
-            await client.change_presence(game=discord.Game(name='type !help'))
             await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
 I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets indicate optional parameter
     Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()""")
