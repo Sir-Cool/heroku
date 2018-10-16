@@ -20,7 +20,7 @@ def remove_zeroes(exp):
                         expression = expression[0:i] + '!"zero"!' + expression[i+1:]
                     changed = True
     return(expression.replace('!"zero"!', '0'))"""
-    return(re.sub(r'^0+(?=[0-9])|(?<=[^0-9])(0+)(?=[0-9])', '', expression))
+    return(re.sub(r'^0+(?=[0-9])|(?<=[^0-9])(0+)(?=[0-9])', '', exp))
 
 global calculated
 calculated = 'not calculated'
