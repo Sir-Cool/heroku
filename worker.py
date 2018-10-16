@@ -3,9 +3,10 @@ import discord
 import random
 import math
 import traceback
+import re
 
 def remove_zeroes(exp):
-    expression = exp.lstrip('0')
+    """expression = exp.lstrip('0')
     numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
     changed = True
     while changed:
@@ -18,7 +19,8 @@ def remove_zeroes(exp):
                     else:
                         expression = expression[0:i] + '!"zero"!' + expression[i+1:]
                     changed = True
-    return(expression.replace('!"zero"!', '0'))
+    return(expression.replace('!"zero"!', '0'))"""
+    return(re.sub(r'^0+(?=[0-9])|(?<=[^0-9])(0+)(?=[0-9])', '', expression))
 
 global calculated
 calculated = 'not calculated'
