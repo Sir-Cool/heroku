@@ -65,14 +65,14 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
             else:
                 exec('global calculated\ncalculated = "' + message.content[11:] + ' = " + str((' + remove_zeroes(message.content.lower().replace('mod', '%').replace('x', '*').replace('sqrt', 'math.sqrt').replace('fact', 'math.factorial').replace('^', '**')[11:]) + ')) + " (modulo ' + modulus + ')"')
         except Exception:
-            calculated = '@Sir_Awesome```' + traceback.format_exc() + '```'
+            calculated = '@Daniel```' + traceback.format_exc() + '```'
         #await client.send_message(message.channel, 'calculated = ' +  ' '.join(message.content.replace('x', '*')[11:]).replace('x', '*'))
         if len(calculated) < 1800:
             await client.send_message(message.channel, str(calculated))
         else:
             with open('answer.txt', 'w') as file:
                 file.write(calculated)
-            await client.send_file(message.channel, './answer.txt', filename='answer to '+message.content[11:], content=message.content[11:])
+            await client.send_file(message.channel, './answer.txt', filename='answer_to_'+message.content[11:].replace(' ', '_'), content=message.content[11:])
     await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+message.content))
 
 @client.event
