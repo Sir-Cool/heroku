@@ -5,6 +5,7 @@ import math
 import traceback
 import re
 import time
+global last_command
 
 def remove_zeroes(exp):
     """expression = exp.lstrip('0')
@@ -35,7 +36,7 @@ def reverse(string):
 
 @client.event
 async def on_message(message):
-    msg = message.content
+    global last_command
     if message.author == client.user:
         return
     await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Working on: '+msg))
@@ -96,7 +97,7 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
             await client.send_file(message.channel, './answer.txt', filename='answer to '+msg[11:], content=msg[11:])
         msg = message.content
         last_command = 'Calculating ' + msg[11:]
-    time.sleep(1)
+    #time.sleep(1)
     await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+last_command))
 
 @client.event
