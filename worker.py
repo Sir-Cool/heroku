@@ -96,7 +96,7 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
             await client.send_file(message.channel, './answer.txt', filename='answer to '+msg[11:], content=msg[11:])
         msg = message.content
         last_command = 'Calculating ' + msg[11:]
-    #time.sleep(3)
+    time.sleep(1)
     await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+last_command))
 
 @client.event
