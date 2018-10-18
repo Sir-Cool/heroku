@@ -61,8 +61,7 @@ client = discord.Client()
 def reverse(string):
     return(''.join([string[len(string) - 1 - i] for i in range(len(string))]))
 
-@client.event
-async def on_message(message):
+async def handle_message(message):
     global cards
     global last_command
     if message.author == client.user:
@@ -111,9 +110,10 @@ async def on_message(message):
     msg = message.content
     nick = message.author.nick
     if '7' in msg:
-        give_cards(message.author.name, 2, nick)
+        occurences = len(msg.split('7')) - 1
+        give_cards(message.author.name, 2 * occurences, nick)
         last_command = 'Wishing ' + nick + ' a nice day.'
-        await client.send_message(message.channel, message.author.mention + ' Have a nice day. (+2 cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Have a ' + ''.join(['very ' for i in range(occurences)]) + 'nice day. (+' + str(2 * occurences) + ' cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if 'rule' in msg.lower():
@@ -129,9 +129,10 @@ async def on_message(message):
     msg = message.content
     nick = message.author.nick
     if '?' in msg.lower():
-        give_cards(message.author.name, 1, nick)
+        occurences = len((' ' + msg + ' ').split('?')) - 1
+        give_cards(message.author.name, 1 * occurences, nick)
         last_command = 'Penalising ' + nick + ' for asking questions.'
-        await client.send_message(message.channel, message.author.mention + ' Asking questions, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Asking questions, +' + str(1 * occurences) + ' cards. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if 'martin' in msg.lower() and not('respect' in msg.lower()):
@@ -191,6 +192,14 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
         last_command = 'Calculating ' + msg[11:]
     time.sleep(1)
     await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+last_command))
+
+@client.event
+async def on_message_edit(before, after):
+    await handle_message(after)
+
+@client.event
+async def on_message(message):
+    await handle_message(message)
 
 @client.event
 async def on_ready():
