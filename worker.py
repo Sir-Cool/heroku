@@ -100,7 +100,10 @@ async def on_message(message):
                 await client.send_message(message.channel, '' + msg[7:] + ' has ' + str(cards[i][0]) + ' cards.')
                 player_found = True
         if player_found == False:
-            await client.send_message(message.channel, '' + msg[7:] + ' not found.')
+            if msg == '!cards download':
+                await client.send_file(message.channel, './cards.txt')
+            else:
+                await client.send_message(message.channel, '' + msg[7:] + ' not found.')
         last_command = 'Counting ' + msg[7:] + '\'s cards.'
     msg = message.content
     nick = message.author.nick
