@@ -144,7 +144,7 @@ async def on_message(message):
     for i in [j.strip(' ') for j in msg.split('.')]:
         #print(i)
         try:
-            if i[0] in [j for j in 'aBCDeFGHiJKLMNoPQRSTuVWXyZ']:
+            if i[0] in [j for j in 'aBCDeFGHiJKLMNoPQRSTuVWXYZ']:
                 badger_rule_broken = True
         except:
             pass
