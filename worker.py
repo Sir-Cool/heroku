@@ -150,8 +150,8 @@ async def on_message(message):
             pass
     if badger_rule_broken:
         give_cards(message.author.name, 1, nick)
-        last_command = 'Penalising ' + nick + ' for violating the badger rule.'
-        await client.send_message(message.channel, message.author.mention + ' Violating the badger rule, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        last_command = 'Penalising ' + nick + ' for failing to respect the badger.'
+        await client.send_message(message.channel, message.author.mention + ' Failure to respect the badger, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if msg.startswith('!help'):
