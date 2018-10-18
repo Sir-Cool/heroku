@@ -113,31 +113,45 @@ async def on_message(message):
     if '7' in msg:
         give_cards(message.author.name, 2, nick)
         last_command = 'Wishing ' + nick + ' a nice day.'
-        await client.send_message(message.channel, 'Have a nice day. (+2 cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Have a nice day. (+2 cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if 'rule' in msg.lower():
         give_cards(message.author.name, 1, nick)
         last_command = 'Penalising ' + nick + ' for talking about the rules.'
-        await client.send_message(message.channel, 'Talking about the rules, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Talking about the rules, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if 'mao' in msg.lower():
         give_cards(message.author.name, 5, nick)
         last_command = 'Penalising ' + nick + ' for taking Mao\'s name in vain.'
-        await client.send_message(message.channel, 'Taking Mao\'s name in vain, +5 cards. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Taking Mao\'s name in vain, +5 cards. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if '?' in msg.lower():
         give_cards(message.author.name, 1, nick)
         last_command = 'Penalising ' + nick + ' for asking questions.'
-        await client.send_message(message.channel, 'Asking questions, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Asking questions, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if 'martin' in msg.lower() and not('respect' in msg.lower()):
         give_cards(message.author.name, 1, nick)
         last_command = 'Penalising ' + nick + ' for failing to respect Martin.'
-        await client.send_message(message.channel, 'Failure to pay respect to Martin, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+        await client.send_message(message.channel, message.author.mention + ' Failure to pay respect to Martin, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+    msg = message.content
+    nick = message.author.nick
+    badger_rule_broken = False
+    for i in [j.strip(' ') for j in msg.split('.')]:
+        #print(i)
+        try:
+            if i[0] in [j for j in 'aBCDeFGHiJKLMNoPQRSTuVWXyZ']:
+                badger_rule_broken = True
+        except:
+            pass
+    if badger_rule_broken:
+        give_cards(message.author.name, 1, nick)
+        last_command = 'Penalising ' + nick + ' for violating the badger rule.'
+        await client.send_message(message.channel, message.author.mention + ' Violating the badger rule, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     nick = message.author.nick
     if msg.startswith('!help'):
