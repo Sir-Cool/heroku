@@ -46,8 +46,9 @@ def give_cards(user, number, nick):
         cards[user][0] += number
         cards[user][1] = nick
     except:
-        cards[user][0] = number
-        cards[user][1] = nick
+        cards[user] = [number, nick]
+        #cards[user][0] = number
+        #cards[user][1] = nick
     save_cards()
 
 global calculated
@@ -67,11 +68,13 @@ async def on_message(message):
     if message.author == client.user:
         return
     msg = message.content
-    give_cards(message.author.name, 0, message.author.nick)
+    nick = message.author.nick
+    give_cards(message.author.name, 0, nick)
     await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Scanning / working on : '+msg))
     #await client.change_presence(game=discord.Game(name='type !help', type='Testing'))
     # we do not want the bot to reply to itself
     
+    nick = message.author.nick
     if msg.startswith('!shuffle'):
         #msg = 'Shuffling'
         await client.send_file(message.channel, './ezgif.com-video-to-gif.gif')
@@ -80,6 +83,7 @@ async def on_message(message):
     #if msg.startswith('!calculate 2x3'):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     msg = message.content
+    nick = message.author.nick
     if msg.startswith('!cards'):
         """try:
             card_number = cards[msg[7:]]
@@ -89,7 +93,7 @@ async def on_message(message):
         """
         open_cards()
         if msg == '!cards':
-            msg = '!cards ' + message.author.nick
+            msg = '!cards ' + nick
         player_found = False
         for i in cards:
             if cards[i][1] == msg[7:]:
@@ -99,31 +103,37 @@ async def on_message(message):
             await client.send_message(message.channel, '' + msg[7:] + ' not found.')
         last_command = 'Counting ' + msg[7:] + '\'s cards.'
     msg = message.content
+    nick = message.author.nick
     if '7' in msg:
-        give_cards(message.author.name, 2, message.author.nick)
-        last_command = 'Wishing ' + message.author.nick + ' a nice day.'
+        give_cards(message.author.name, 2, nick)
+        last_command = 'Wishing ' + nick + ' a nice day.'
         await client.send_message(message.channel, 'Have a nice day. (+2 cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
+    nick = message.author.nick
     if 'rule' in msg.lower():
-        give_cards(message.author.name, 1, message.author.nick)
-        last_command = 'Penalising ' + message.author.nick + ' for talking about the rules.'
+        give_cards(message.author.name, 1, nick)
+        last_command = 'Penalising ' + nick + ' for talking about the rules.'
         await client.send_message(message.channel, 'Talking about the rules, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
+    nick = message.author.nick
     if 'mao' in msg.lower():
-        give_cards(message.author.name, 5, message.author.nick)
-        last_command = 'Penalising ' + message.author.nick + ' for taking Mao\'s name in vain.'
+        give_cards(message.author.name, 5, nick)
+        last_command = 'Penalising ' + nick + ' for taking Mao\'s name in vain.'
         await client.send_message(message.channel, 'Taking Mao\'s name in vain, +5 cards. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
+    nick = message.author.nick
     if '?' in msg.lower():
-        give_cards(message.author.name, 1, message.author.nick)
-        last_command = 'Penalising ' + message.author.nick + ' for asking questions.'
+        give_cards(message.author.name, 1, nick)
+        last_command = 'Penalising ' + nick + ' for asking questions.'
         await client.send_message(message.channel, 'Asking questions, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
+    nick = message.author.nick
     if 'martin' in msg.lower() and not('respect' in msg.lower()):
-        give_cards(message.author.name, 1, message.author.nick)
-        last_command = 'Penalising ' + message.author.nick + ' for failing to respect Martin.'
+        give_cards(message.author.name, 1, nick)
+        last_command = 'Penalising ' + nick + ' for failing to respect Martin.'
         await client.send_message(message.channel, 'Failure to pay respect to Martin, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
+    nick = message.author.nick
     if msg.startswith('!help'):
         if msg == '!help':
             await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
@@ -131,6 +141,7 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
     Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()\nI also enforce the rules of a slightly modified game of Mao on this server. To view a player's card balance type: !cards <player_nickname>""")
             last_command = '!help'
     msg = message.content
+    nick = message.author.nick
     if msg.startswith('!calculate'):
         global calculated
         modulus = None
