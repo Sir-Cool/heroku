@@ -69,6 +69,9 @@ async def on_message(message):
         return
     msg = message.content
     nick = message.author.nick
+    if nick == None:
+        message.author.nick = message.author.name
+        nick = message.author.nick
     give_cards(message.author.name, 0, nick)
     await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Scanning / working on : '+msg))
     #await client.change_presence(game=discord.Game(name='type !help', type='Testing'))
