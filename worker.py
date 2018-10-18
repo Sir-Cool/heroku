@@ -6,6 +6,7 @@ import traceback
 import re
 import time
 global last_command
+global cards
 
 def remove_zeroes(exp):
     """expression = exp.lstrip('0')
@@ -24,6 +25,31 @@ def remove_zeroes(exp):
     return(expression.replace('!"zero"!', '0'))"""
     return(re.sub(r'^0+(?=[0-9])|(?<=[^0-9])(0+)(?=[0-9])', '', exp))
 
+def open_cards():
+    global cards
+    with open('cards.txt') as file:
+        code = 'global cards\ncards = {"' + file.read().replace('\n', '"],"').replace(': ', '": [').replace('-', ',"')[:-2] + '}'
+        exec(code)
+
+def save_cards():
+    global cards
+    save_data = ''
+    for i in cards:
+        save_data += i + ': ' + str('-'.join([str(j) for j in cards[i]])) + '\n'
+    with open('cards.txt', 'w') as file:
+        file.write(save_data)
+
+def give_cards(user, number, nick):
+    global cards
+    open_cards()
+    try:
+        cards[user][0] += number
+        cards[user][1] = nick
+    except:
+        cards[user][0] = number
+        cards[user][1] = nick
+    save_cards()
+
 global calculated
 calculated = 'not calculated'
 
@@ -36,10 +62,13 @@ def reverse(string):
 
 @client.event
 async def on_message(message):
+    global cards
     global last_command
     if message.author == client.user:
         return
-    await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Working on: '+msg))
+    msg = message.content
+    give_cards(message.author.name, 0, message.author.nick)
+    await client.change_presence(status=discord.Status.dnd, game=discord.Game(name='Scanning / working on : '+msg))
     #await client.change_presence(game=discord.Game(name='type !help', type='Testing'))
     # we do not want the bot to reply to itself
     
@@ -51,23 +80,55 @@ async def on_message(message):
     #if msg.startswith('!calculate 2x3'):
     #    await client.send_message(message.channel, '2x3=1 (modulo 5) obviously')
     msg = message.content
+    if msg.startswith('!cards'):
+        """try:
+            card_number = cards[msg[7:]]
+            await client.send_message(message.channel, 'Player ' + msg[7:] + ' has ' + str(card_number) + ' cards.')
+        except:
+            await client.send_message(message.channel, 'Player ' + msg[7:] + ' not found.')
+        """
+        open_cards()
+        if msg == '!cards':
+            msg = '!cards ' + message.author.nick
+        player_found = False
+        for i in cards:
+            if cards[i][1] == msg[7:]:
+                await client.send_message(message.channel, '' + msg[7:] + ' has ' + str(cards[i][0]) + ' cards.')
+                player_found = True
+        if player_found == False:
+            await client.send_message(message.channel, '' + msg[7:] + ' not found.')
+        last_command = 'Counting ' + msg[7:] + '\'s cards.'
+    msg = message.content
+    if '7' in msg:
+        give_cards(message.author.name, 2, message.author.nick)
+        last_command = 'Wishing ' + message.author.nick + ' a nice day.'
+        await client.send_message(message.channel, 'Have a nice day. (+2 cards). You now have ' + str(cards[message.author.name][0]) + ' cards.')
+    msg = message.content
+    if 'rule' in msg.lower():
+        give_cards(message.author.name, 1, message.author.nick)
+        last_command = 'Penalising ' + message.author.nick + ' for talking about the rules.'
+        await client.send_message(message.channel, 'Talking about the rules, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
+    msg = message.content
     if 'mao' in msg.lower():
-        await client.send_message(message.channel, 'Taking Mao\'s name in vain, +5 cards.')
-        last_command = 'Penalising taking Mao\'s name in vain.'
+        give_cards(message.author.name, 5, message.author.nick)
+        last_command = 'Penalising ' + message.author.nick + ' for taking Mao\'s name in vain.'
+        await client.send_message(message.channel, 'Taking Mao\'s name in vain, +5 cards. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     if '?' in msg.lower():
-        await client.send_message(message.channel, 'Asking questions, +1 card.')
-        last_command = 'Penalising asking questions.'
+        give_cards(message.author.name, 1, message.author.nick)
+        last_command = 'Penalising ' + message.author.nick + ' for asking questions.'
+        await client.send_message(message.channel, 'Asking questions, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     if 'martin' in msg.lower() and not('respect' in msg.lower()):
-        await client.send_message(message.channel, 'Failure to pay respect to Martin, +1 card.')
-        last_command = 'Penalising failure to respect Martin.'
+        give_cards(message.author.name, 1, message.author.nick)
+        last_command = 'Penalising ' + message.author.nick + ' for failing to respect Martin.'
+        await client.send_message(message.channel, 'Failure to pay respect to Martin, +1 card. You now have ' + str(cards[message.author.name][0]) + ' cards.')
     msg = message.content
     if msg.startswith('!help'):
         if msg == '!help':
             await client.send_message(message.channel, """I am Martin, I like to shuffle (!shuffle)
 I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets indicate optional parameter
-    Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()""")
+    Enter expressions using the following symbols: + - x / ^ and the following functions: sqrt() fact()\nI also enforce the rules of a slightly modified game of Mao on this server. To view a player's card balance type: !cards <player_nickname>""")
             last_command = '!help'
     msg = message.content
     if msg.startswith('!calculate'):
@@ -97,7 +158,7 @@ I also like modular arithmetic! (!calculate [ mod <modulus>]) <- square brackets
             await client.send_file(message.channel, './answer.txt', filename='answer to '+msg[11:], content=msg[11:])
         msg = message.content
         last_command = 'Calculating ' + msg[11:]
-    #time.sleep(1)
+    time.sleep(1)
     await client.change_presence(status=discord.Status.online, game=discord.Game(name='type !help - Last completed command: '+last_command))
 
 @client.event
