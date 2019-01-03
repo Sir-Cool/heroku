@@ -9,7 +9,8 @@ global last_command
 global cards
 import os
 
-os.sys("wget http://sirawesome.pythonanywhere.com/cards.txt")
+os.system("rm cards.txt")
+os.system("wget http://sirawesome.pythonanywhere.com/cards.txt")
 
 def remove_zeroes(exp):
     """expression = exp.lstrip('0')
@@ -53,7 +54,8 @@ def give_cards(user, number, nick):
         #cards[user][0] = number
         #cards[user][1] = nick
     save_cards()
-    os.sys("wget http://sirawesome.pythonanywhere.com/cards.txt?user=%s&number=%s&nick=%s" % (user, number, nick))
+    os.system("rm cards.txt")
+    os.system("wget -O cards.txt \"http://sirawesome.pythonanywhere.com/cards.txt?user=%s&number=%s&nick=%s\"" % (user, number, nick))
 
 global calculated
 calculated = 'not calculated'
